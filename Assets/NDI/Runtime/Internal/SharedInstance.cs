@@ -1,38 +1,41 @@
-namespace NDI {
+﻿using UnityEngine;
 
-static class SharedInstance
+namespace NDI
 {
-    static public Interop.Find Find => GetFind();
 
-    static bool _initialized;
-    static Interop.Find _find;
-
-    static Interop.Find GetFind()
+    static class SharedInstance
     {
-        Setup();
-        return _find;
+        static public Interop.Find Find => GetFind();
+
+        static bool _initialized;
+        static Interop.Find _find;
+
+        static Interop.Find GetFind()
+        {
+            Setup();
+            return _find;
+        }
+
+        static void Setup()
+        {
+            if (_initialized) return;
+
+#if UNITY_EDITOR
+            UnityEditor.AssemblyReloadEvents.beforeAssemblyReload += OnDomainReload;
+#endif
+
+            _find = Interop.Find.Create();
+
+            _initialized = true;
+        }
+
+        static void OnDomainReload()
+        {
+            _find?.Dispose();
+            _find = null;
+
+            _initialized = false;
+        }
     }
-
-    static void Setup()
-    {
-        if (_initialized) return;
-
-    #if UNITY_EDITOR
-        UnityEditor.AssemblyReloadEvents.beforeAssemblyReload += OnDomainReload;
-    #endif
-
-        _find = Interop.Find.Create();
-
-        _initialized = true;
-    }
-
-    static void OnDomainReload()
-    {
-        _find?.Dispose();
-        _find = null;
-
-        _initialized = false;
-    }
-}
 
 }

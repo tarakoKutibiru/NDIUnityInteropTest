@@ -1,18 +1,29 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-namespace NDI {
-
-public static class NdiFinder
+namespace NDI
 {
-    public static IEnumerable<string> sourceNames => EnumerateSourceNames();
 
-    public static IEnumerable<string> EnumerateSourceNames()
+    public static class NdiFinder
     {
-        var list = new List<string>();
-        foreach (var source in SharedInstance.Find.CurrentSources)
-            list.Add(source.NdiName);
-        return list;
+        public static IEnumerable<string> sourceNames => EnumerateSourceNames();
+
+        public static IEnumerable<string> EnumerateSourceNames()
+        {
+            if (SharedInstance.Find == null)
+            {
+                Debug.LogError(SharedInstance.Find);
+            }
+            else
+            {
+                Debug.Log("Find Created!" + SharedInstance.Find);
+            }
+
+            var list = new List<string>();
+            foreach (var source in SharedInstance.Find.CurrentSources)
+                list.Add(source.NdiName);
+            return list;
+        }
     }
-}
 
 }
