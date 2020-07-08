@@ -1,4 +1,7 @@
 ﻿using UnityEngine;
+using System;
+using UnityEngine.Android;
+using System.Collections.Generic;
 
 namespace NDI
 {
@@ -36,6 +39,7 @@ namespace NDI
 
             _initialized = false;
         }
+
     }
 
 }

@@ -14,10 +14,6 @@ namespace NDI
             {
                 Debug.LogError(SharedInstance.Find);
             }
-            else
-            {
-                Debug.Log("Find Created!" + SharedInstance.Find);
-            }
 
             var list = new List<string>();
             foreach (var source in SharedInstance.Find.CurrentSources)
