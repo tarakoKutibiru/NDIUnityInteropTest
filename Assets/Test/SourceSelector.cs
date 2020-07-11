@@ -1,6 +1,8 @@
 ﻿using NDI;
+using NewTek;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,18 +20,10 @@ public class SourceSelector : MonoBehaviour
 
     void Start()
     {
-        List<string> permissions = new List<string>();
-        permissions.Add("android.permission.ACCESS_WIFI_STATE");
-        permissions.Add("android.permission.CHANGE_WIFI_MULTICAST_STATE");
-        permissions.Add("android.permission.ACCESS_NETWORK_STATE");
+        WifiManager.GetInstance().SetupNetwork();
+        _receiver = GetComponent<NdiReceiver>();
 
-        System.Collections.IEnumerator requestPermission = PermissionHelper.RequestPermissions(permissions, () =>
-        {
-            WifiManager.GetInstance().SetEnabledMulticast(true);
-            _receiver = GetComponent<NdiReceiver>();
-        });
-
-        StartCoroutine(requestPermission);
+        Debug.Log(string.Format("NDI SDK Version {0}", Marshal.PtrToStringAnsi(NDIlib.version())));
     }
 
     void Update()

@@ -36,6 +36,11 @@ namespace NDI.Interop
             return _Create(new Settings { ShowLocalSources = true });
         }
 
+        ~Find()
+        {
+            NDIlib.destroy();
+        }
+
         unsafe public Span<Source> CurrentSources
         {
             get

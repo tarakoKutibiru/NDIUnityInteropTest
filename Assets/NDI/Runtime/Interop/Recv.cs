@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32.SafeHandles;
+using NewTek;
 using System;
 using System.Runtime.InteropServices;
 
@@ -51,7 +52,23 @@ namespace NDI.Interop
         #region Public methods
 
         public static Recv Create(in Settings settings)
-          => _Create(settings);
+        {
+            if (!NDIlib.initialize())
+            {
+                if (!NDIlib.is_supported_CPU())
+                    UnityEngine.Debug.LogError("CPU incompatible with NDI.");
+                else
+                    UnityEngine.Debug.LogError("Unable to initialize NDI.");
+                return null;
+            }
+
+            return _Create(settings);
+        }
+
+        ~Recv()
+        {
+            NDIlib.destroy();
+        }
 
         public FrameType Capture
           (out VideoFrame video, IntPtr audio, IntPtr metadata, uint timeout)

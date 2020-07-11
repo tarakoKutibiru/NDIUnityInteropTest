@@ -10,18 +10,19 @@ public class WifiManager
         return instance;
     }
 
-    private WifiManager()
+    private WifiManager() { }
+
+    public void SetupNetwork()
     {
+        // The NDI SDK for Android uses NsdManager to search for NDI video sources on the local network.
+        // So we need to create and maintain an instance of NSDManager before performing Find, Send and Recv operations.
 #if UNITY_ANDROID && !UNITY_EDITOR
         using (AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))
         {
             using (AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext"))
             {
-                Debug.Log("Context: " + context);
-
                 using (AndroidJavaObject nsdManager = context.Call<AndroidJavaObject>("getSystemService", "servicediscovery"))
                 {
-                    Debug.Log("NsdManager: " + nsdManager);
                     this.nsdManager = nsdManager;
                 }
             }
@@ -29,10 +30,6 @@ public class WifiManager
 #endif
     }
 
-    /// <summary>
-    /// Multicast機能の有効無効設定
-    /// </summary>
-    /// <param name="enabled"></param>
     public void SetEnabledMulticast(bool enabled)
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
