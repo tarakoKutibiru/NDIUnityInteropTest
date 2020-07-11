@@ -30,64 +30,7 @@ public class WifiManager
 #endif
     }
 
-    public void SetEnabledMulticast(bool enabled)
-    {
-#if UNITY_ANDROID && !UNITY_EDITOR
-        using (AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))
-        {
-            using (var wifiManager = activity.Call<AndroidJavaObject>("getSystemService", "wifi"))
-            {
-                using (var multicastLock = wifiManager.Call<AndroidJavaObject>("createMulticastLock", "NDI_LOCK"))
-                {
-
-                    if (enabled)
-                    {
-                        try
-                        {
-                            multicastLock.Call("release");
-                        }
-                        catch
-                        {
-
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            multicastLock.Call("acquire");
-                        }
-                        catch
-                        {
-
-                        }
-                    }
-                }
-            }
-        }
-#endif
-    }
-
-    public bool IsEnabledMulticast()
-    {
-#if UNITY_ANDROID && !UNITY_EDITOR
-        using (AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))
-        {
-            using (var wifiManager = activity.Call<AndroidJavaObject>("getSystemService", "wifi"))
-            {
-                using (var multicastLock = wifiManager.Call<AndroidJavaObject>("createMulticastLock", MULTI_CAST_LOCK_NAME))
-                {
-                    return multicastLock.Call<bool>("isHeld");
-                }
-            }
-        }
-#endif
-
-        return true;
-    }
-
 #if UNITY_ANDROID && !UNITY_EDITOR
     AndroidJavaObject nsdManager = null;
-    const string MULTI_CAST_LOCK_NAME = "NDI_LOCK";
 #endif
 }
